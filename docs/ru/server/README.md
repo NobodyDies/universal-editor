@@ -23,12 +23,12 @@
     * getData(config) – обрабатывает данные, отправляемые данные запроса, возвращает объект с данными;
     * getParams(config) – обрабатывает данные запроса, передаваемые в URL запроса, возвращает объект с данными;
     * getURL(config) – обрабатывает URL запроса, возвращает строку;
-    * processResponse(response, success, fail) – обрабатывает ответ от сервера;  
+    * processResponse(config, response, success, fail) – обрабатывает ответ от сервера;  
 
 В ядре редактора по заданной маске ({standard}ApiService) будет производиться инжект сервиса. При отправке данные запроса обрабатываются этим сервисом, оперируя выше приведенным интерфейсом, а затем исполняются. 
 Все функции сервиса имеют необязательный характер и, в случае отсутствия, не вызываются (исполняется логика по-умолчанию).
 Полученный ответ передается в функцию для обработки ответа `processResponse`.
-В рамках контекста(исполнения) `processResponse` доступны функции `fail` и `success` (передаются из редактора при вызове `processResponse`). Функция `success` вызывается при удачной обработке ответа, а `fail` – при неудачной.
+В рамках контекста(исполнения) `processResponse` доступны функции `fail` и `success` (передаются из редактора при вызове `processResponse`). Эти функции содержат логику редактора по-умолчанию после получения ответа от сервера (вызов событий обновления, переход по стейтам...), которую можно не выполнять и написать свою. Функция `success` вызывается при удачной обработке ответа, а `fail` – при неудачной.
 Ниже приведен пример создания модуля и способ его внедрения в редактор:
 
 ```javascript
@@ -76,19 +76,22 @@ angular.module('demoApp', ['universal.editor', 'ModuleWithService'])
 
 | Параметр | Тип | Описание | Обязательный параметр? | Значение по-умолчанию |
 | --- | --- | --- | --- | --- |
-| action | string | Тип запроса в рамках редактора ('list', 'one', 'create', 'update', 'delete'). | - | - |
-| url | string | URL сервера из конфигурации dataSource. | - | - |
+| action | string | Тип запроса в рамках редактора ('list', 'one', 'create', 'update', 'delete'). | + | - |
+| url | string | URL сервера из конфигурации dataSource. | + | - |
 | headers | object | Заголовки запроса. | - | - |
-| data | object | Данные, отправляемые в запросе. | - | - |
-| params | object | Параметры, отправляемые в запросе через URL (search-параметры). | - | - |
+| data | object | Данные, отправляемые в запросе. | + | - |
+| params | object | Параметры, отправляемые в запросе через URL (search-параметры). | + | - |
 | filter | object | Объект с данными, передаваемые в фильтре. | - | - |
 | filter[\<field\>] | array | Массив объектов поля `<field>` | - | - |
 | filter[\<field\>][N][operator] | string | Значение оператора для поля `<field>` в фильтре. | - | - |
 | filter[\<field\>][N][value] | string | Значение поля `<field>` в фильтре. | - | - |
-| sortFieldName | string | Имя поля для сортировки. | - | - |
+| sort | array | Объект с данными, передаваемые в сортировке. | - | - |
+| sort.[].field | string | Имя сортируемого поля. | - | - |
+| sort.[].direction | string |  Направление сортировки. (Множество значений: `asc` (по возрастанию), `desc` (по убыванию))  | - | - |
 | pagination | object | Объект с данными серверной пагинации. | - | - |
 | pagination[page] | integer | Номер текущей страницы. | - | - |
 | pagination[perPage] | integer | Количество записей на странице. | - | - |
+| preventDefault | function | Функция без аргументов, вызов которой отменяет дальнейшую обработку и отправку запроса.| + | - |
 ```javascript
 
 var config = {
@@ -123,6 +126,32 @@ var config = {
           }
         ]  
       },
-    sortFieldName: 'title'       
+    sort: [{
+      field: 'title',
+      direction: 'asc'
+    }]
   }
+```
+
+В случае, если нужно поправить что-то незначительное, в целях экономии времени можно унаследовать часть логики от `YiiSoftApiService` (сервис по-умолчанию).
+
+```javascript
+.angular.module('demoApp', ['universal.editor'])
+  .service('NewApiService', NewApiService);
+
+  NewApiService.$inject = ['$q', 'YiiSoftApiService'];
+
+  function NewApiService($q, YiiSoftApiService) {
+    var self = this;
+    angular.merge(self, YiiSoftApiService);
+
+    self.processResponse = function(config, responseServer, success, fail) {
+      if (responseServer.status >= 400 || responseServer.status === -1) {
+          fail(responseServer);
+      } else {
+          success(responseServer);
+      }
+      return responseServer.data;
+    };
+  };
 ```

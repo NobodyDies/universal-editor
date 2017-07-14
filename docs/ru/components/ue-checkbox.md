@@ -13,7 +13,6 @@
         hint: 'Это поле выбора опций',
         multiple: true,
         multiname: 'new_value',
-        depend: 'other_field_name',
         serverPagination: false,
         width: 6,
         templates: {
@@ -25,18 +24,6 @@
             filter: 'module/components/templates/filterTemplate.html'
         },
         defaultValue: 'bla-bla-bla',
-        values: {
-            0: 'Draft',
-            10: 'Archived',
-            100: 'Published',
-        },
-        valuesRemote: {
-            fields: {
-                value: "id",
-                label: "name"
-            },
-            url: "http://universal-backend.dev/rest/v1/staff"
-        },
         trueValue: 1,
         falseValue: 0
     }
