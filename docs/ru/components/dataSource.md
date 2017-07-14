@@ -35,7 +35,7 @@
                 return {};
             }
             method: 'POST',
-            url: '/domain/entities:id' | function(item) { return '/domain/entities/' + (item.id || 'new'); },
+            url: '/domain/entities/:id' | function(item) { return '/domain/entities/' + (item.id || 'new'); },
             handlers: {
                 before: function (config, e) {
                     e.preventDefault(); // this is canceled request
