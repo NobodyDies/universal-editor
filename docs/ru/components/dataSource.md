@@ -42,7 +42,7 @@
                 },
                 error: function (response, e) {},
                 success: function (response, e) {},
-                complete: function () {}
+                complete: function (e) {}
             }
         },
         read: {
