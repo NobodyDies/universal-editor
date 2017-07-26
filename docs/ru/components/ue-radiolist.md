@@ -10,10 +10,27 @@
     name: 'ue-radiolist',
     settings: {
         label: 'Radiolist label',
-        serverPagination: false,
         hint: 'Это поле автозаполнения',
         multiple: true,
         multiname: 'new_value',
+        dataSource: {
+            standart: 'YiiSoft',
+            data: [
+                { id: 1, title: 'Value1'},
+                { id: 2, title: 'Value2'},
+                { id: 3, title: 'Value3'}
+            ],
+            scheme: {                
+                model: {
+                    id: 'id',
+                    label: 'title',
+                    fields: [
+                        { name: 'id'},
+                        { name: 'title'}
+                    ]
+                }
+            }
+        },
         width: 6,
         templates: {
             preview: '<span> {{value}} </span>',
@@ -33,7 +50,6 @@
 | name | string | Название компонента. | + | - |
 | settings | object | Объект настройки компонента | + | - |
 | settings[label] | string | Название поля (выводится в интерфейсе редактора) | + | - |
-| settings[serverPagination] | boolean | Флаг серверной пагинации. Если принимает значение `true`, то компонент будет делать запросы за всеми страницами с данными. | - | `false` |
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
 | settings[multiple] | bool | Параметр отвечает за указание возможности поля принимать множественные значения. | - | false |
 | settings[required] | bool | Выделяет заголовок поля жирным, говоря об обязательности заполнения. | - | false |
@@ -46,5 +62,3 @@
 | settings[width] | int | Ширина поля в единицах bootstrap-сетки, принимаемое значении от 1 до 6. | - | 6 |
 | settings[defaultValue] | string | Значение поля по-умолчанию. | - | - |
 | settings[dataSource] | object | Источник данных | + | - |
-
-Одновременно может быть указан только один из форматов получения данных для поля ( values или valuesRemote ).

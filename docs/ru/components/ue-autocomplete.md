@@ -7,8 +7,25 @@
 {
     name: 'ue-autocomplete',
     settings: {
-        label: 'Autocomplete label',
-        serverPagination: false,
+        label: 'Autocomplete label',        
+        dataSource: {
+            standart: 'YiiSoft',
+            data: [
+                { id: 1, title: 'Value1'},
+                { id: 2, title: 'Value2'},
+                { id: 3, title: 'Value3'}
+            ],
+            scheme: {                
+                model: {
+                    id: 'id',
+                    label: 'title',
+                    fields: [
+                        { name: 'id'},
+                        { name: 'title'}
+                    ]
+                }
+            }
+        },
         hint: 'Это поле автозаполнения',
         multiple: true,
         multiname: 'new_value',
@@ -40,7 +57,6 @@
 | settings[multiple] | bool | Параметр отвечает за указание возможности поля принимать множественные значения. | - | false |
 | settings[readonly] | bool | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. | - | false |
 | settings[template] | object | Объект для настройки шаблонов. | - | - |
-| settings[serverPagination] | boolean | Флаг серверной пагинации. Если принимает значение `true`, то компонент будет делать запросы за всеми страницами с данными. | - | `false` |
 | settings[templates][preview] | string или function | Строка с HTML-кодом шаблона, функция, возвращающая шаблон, или путь до шаблона в режиме просмотра (например отображение в таблице). | + | - |
 | settings[templates][edit] | string или function  | Строка с HTML-кодом шаблона, функция, возвращающая шаблон, или путь до шаблона в режиме редактирования (например отображение на форме редактирования). | + | - |
 | settings[templates][filter] | string или function  | Строка с HTML-кодом шаблона, функция, возвращающая шаблон, или путь до шаблона в режиме фильтра (например, отображение в фильтре). | + | - |

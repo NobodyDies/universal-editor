@@ -21,12 +21,10 @@
         {id: 2, title: 'Record2', type: 'type1', total: 30},
         {id: 3, title: 'Record2', type: 'type2', total: 50}
     ],
-    sortBy: [
-        { field: 'total', direction: 'asc'},
-        { field: 'type', direction: 'asc'}
-    ],
+    sortBy: [ 'total', '-type'],
     transport: {
-        create | update | 'delete': {
+        serverPagination: true,
+        create: {
             contentType: 'application/x-www-form-urlencoded',
             data: function(item) {
                 return item
@@ -35,7 +33,7 @@
                 return {};
             }
             method: 'POST',
-            url: '/domain/entities/:id' | function(item) { return '/domain/entities/' + (item.id || 'new'); },
+            url: '/domain/entities/new',
             handlers: {
                 before: function (config, e) {
                     e.preventDefault(); // this is canceled request
@@ -43,6 +41,32 @@
                 error: function (response, e) {},
                 success: function (response, e) {},
                 complete: function (e) {}
+            }
+        },
+        update: {
+            contentType: 'application/x-www-form-urlencoded',
+            data: function(item) {
+                return item
+            },
+            method: 'PUT',
+            url: '/domain/entities/:id',
+            handlers: {
+                before: function (config, e) {
+                    e.preventDefault(); // this is canceled request
+                },
+                error: function (response, e) {},
+                success: function (response, e) {},
+                complete: function (e) {}
+            }
+        },
+        destroy: {
+            contentType: 'application/x-www-form-urlencoded',
+            data: function(item) {
+                return item
+            },
+            method: 'DELETE',
+            url: function(item) { 
+                return '/domain/entities/' + item.id; 
             }
         },
         read: {
@@ -57,18 +81,9 @@
                 return {};
             }
             method: 'GET',
-            url: '/domain/entities',
-            handlers: {
-                before: function (config, e) {
-                    e.preventDefault(); // this is canceled request
-                },
-                error: function (response, e) {},
-                success: function (response, e) {},
-                complete: function (e) {}
-            }
+            url: '/domain/entities'
         }
-    }, 
-    serverPagination: true,
+    },     
     scheme: {
         dataKey: 'items', // может быть сложный путь типа 'field.items'
         parse: function(response) {
@@ -138,30 +153,29 @@
 
 | Параметр | Тип | Описание | Обязательный параметр? | Значение по-умолчанию |
 | --- | --- | --- | --- | --- |
-| standard | string | Cтиль построения архитектуры.  | + | `YiiSoft` |
+| standard | string | Cтиль построения архитектуры.  | + | - |
 | data | array | Массив локальных значений.  | - | - |
-| sortBy | array | Описание многоуровневой сортировки, заданная по-умолчанию.  | - | - |
-| sortBy[].field | string | Имя сортируемого поля.  | - | - |
-| sortBy[].direction | string | Направление сортировки. (Множество значений: `asc` (по возрастанию), `desc` (по убыванию))  | - | asc |
+| sortBy | array | Описание многоуровневой сортировки, заданная по-умолчанию. Представляет собой массив значений, элементы которого по-умолчанию передаются через запятую в READ-запросах в качестве query-параметра сортировки.  | - | - |
 | transport | object | Описание CRUD-операций.  | - | - |
+| transport.url | string | URL-запроса. Используется по-умолчанию в запросах, если в секциях `read`, `create`, `update`, `destroy` не указан URL.  | - | Устанавливается сервисом, определяющим стиль построения архитектуры. |
 | transport.read | object | Описание READ-запроса.  | - | - |
 | transport.create | object | Описание CREATE-запроса.  | - | - |
 | transport.update | object | Описание UPDATE-запроса.  | - | - |
-| transport.delete | object | Описание DELETE-запроса.  | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.contentType | string | Тип контента используемый при отправке данных на сервер.  | - | `application/x-www-form-urlencoded` |
-| transport.{`read`,`create`,`update`,`delete`}.method | string | Тип запроса (PUT, POST, UPDATE...).  | - | GET |
-| transport.{`read`,`create`,`update`,`delete`}.headers | function или object | Коллбек возвращающий заголовки запроса или непосредственно json-объект с заголовками. Коллбек принимает в качестве аргумента объект с данными, определяемые компонентом. | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.data | function или object | Коллбек возвращающий тело запроса или непосредственно тело запроса в виде json-объекта. Коллбек принимает в качестве аргумента объект с данными, определяемые компонентом.  | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.params | function или object | Коллбек возвращающий search-параметры запроса или непосредственно json-объект. Search-параметры отправлются как часть адреса в запросе. Коллбек принимает в качестве аргумента объект с данными, определяемые компонентом.    | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.url | string или function | URL-запроса или коллбек возвращающий url. Коллбек принимает в качестве аргумента объект с данными, определяемые компонентом.  | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.handlers | object | Пред- и пост-обработчики запроса.  | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.handlers.before | function | Обработчик, вызываемый перед отправкой запроса. Имеется возможность при необходимости отменить запрос. | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.handlers.error | function | Обработчик, вызываемый в случае ошибочного запроса. Полезен для дополнительной обработки ошибок.  | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.handlers.success | function | Обработчик, вызываемый в случае удачного запроса.   | - | - |
-| transport.{`read`,`create`,`update`,`delete`}.handlers.complete | function | Обработчик, вызываемый после окончании запроса.  | - | - |
-| serverPagination | boolean | Флаг наличия серверной пагинации.  | + | true |
+| transport.destroy | object | Описание DELETE-запроса.  | - | - |
+| transport.{`read`,`create`,`update`,`destroy`}.contentType | string | Тип контента используемый при отправке данных на сервер.  | - | Устанавливается сервисом, определяющим стиль построения архитектуры. |
+| transport.{`read`,`create`,`update`,`destroy`}.method | string | Тип запроса (PUT, POST, UPDATE...).  | - | Устанавливается сервисом, определяющим стиль построения архитектуры. |
+| transport.{`read`,`create`,`update`,`destroy`}.headers | function или object | Коллбек возвращающий заголовки запроса или непосредственно json-объект с заголовками. Коллбек принимает в качестве аргумента объект с данными, определяемые компонентом. | - | Устанавливается сервисом, определяющим стиль построения архитектуры. |
+| transport.{`read`,`create`,`update`,`destroy`}.data | function | Коллбек возвращающий тело запроса в виде json-объекта. Коллбек принимает в качестве аргумента объект с данными, определяемые компонентом.  | - | - |
+| transport.{`read`,`create`,`update`,`destroy`}.params | function | Коллбек возвращающий query-параметры запроса или непосредственно json-объект. Query-параметры отправлются как часть адреса в запросе. Коллбек принимает в качестве аргумента объект с данными, определяемые компонентом.    | - | - |
+| transport.{`read`,`create`,`update`,`destroy`}.url | string или function | URL-запроса или коллбек возвращающий URL. Коллбек принимает в качестве аргумента объект с данными, определяемые компонентом.  | - | Наследуется из `transport.url` |
+| transport.{`read`,`create`,`update`,`destroy`}.handlers | object | Пред- и пост-обработчики запроса.  | - | - |
+| transport.{`read`,`create`,`update`,`destroy`}.handlers.before | function | Обработчик, вызываемый перед отправкой запроса. Имеется возможность при необходимости отменить запрос. | - | - |
+| transport.{`read`,`create`,`update`,`destroy`}.handlers.error | function | Обработчик, вызываемый в случае ошибочного запроса. Полезен для дополнительной обработки ошибок.  | - | - |
+| transport.{`read`,`create`,`update`,`destroy`}.handlers.success | function | Обработчик, вызываемый в случае удачного запроса.   | - | - |
+| transport.{`read`,`create`,`update`,`destroy`}.handlers.complete | function | Обработчик, вызываемый после окончании запроса.  | - | - |
+| transport.serverPagination | boolean | Флаг наличия серверной пагинации.  | + | true |
 | scheme | object | Описание схемы работы с данными. | - | - |
-| scheme.dataKey | string | Имя поля с данными отправляемые сервером. | - | `` |
+| scheme.dataKey | string | Имя поля с данными отправляемые сервером. | - | Устанавливается сервисом, определяющим стиль построения архитектуры. |
 | scheme.parse | function | Коллбек для переработки значений, приходящих с сервера. Данные не всегда могут отдаваться в нужном формате. Коллбек должен возвращать данные, с которыми умеет работать компонент. В качестве аргумента принимает ответ от сервера. | - | - |
 | scheme.model | object | Описание модели данных | + | - |
 | scheme.model.id | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи.  | + | - |
@@ -175,28 +189,22 @@
 
 ## Многоуровневая сортировка (sortBy)
 
-Настройка `sortBy` позволяет задать сортировку по-умолчанию. Принимает массив объектов, которые содержат имя поля (`field`) и соответствующее направление сортировки (`direction`). Направление сортировки включает в себя два значения `asc` – по возрастанию и `desc` – по убыванию. 
-Порядок задания таких объектов оказывает влияние на конечный результат, согласно алгоритму сортировок такого вида.
-Это означает, что значение сортировок
+Настройка `sortBy` позволяет задать сортировку по-умолчанию. Представляет собой массив значений, элементы которого по-умолчанию передаются через запятую в READ-запросах в качестве query-параметра сортировки. 
+Порядок задания оказывает влияние на конечный результат, согласно алгоритму сортировок такого вида.
+Например, при условии работы с сервисом `YiiSoft` это означает, что значение сортировок по-умолчанию
 
 ```javascript
-sortBy: [
-    { field: 'total', direction: 'asc'},
-    { field: 'type', direction: 'desc'}
-]
+sortBy: ['total', '-type']
 ```
  и
 
  ```javascript
-sortBy: [
-    { field: 'type', direction: 'desc'},
-    { field: 'total', direction: 'asc'}    
-]
+sortBy: ['-type', 'total']
 ```
 
 даст разный результат. В первом случае все значения сначала отсортируются по возрастанию по полю `total`, а затем каждая группа записей с одинаковым значением в поле `total` отсортируется по убыванию по полю `type` независимо от других групп. Во втором случае все произойдет по той же схеме но в обратном порядке полей.
 
-По-умолчанию многоуровневая сортировка в запросах передается через запятую в виде `http://domain?sort=field,-field2,field3`. Чтобы поменять формат сортировки, нужно реализовать свой сервис по работе с API (см. подробнее хздесь](../server/README.md)).
+По-умолчанию многоуровневая сортировка в запросах передается через запятую в виде `http://domain?sort=field,-field2,field3`. Чтобы поменять формат сортировки, нужно реализовать свой сервис по работе с API (см. подробнее [здесь](../server/README.md)).
 
 ## Описание CRUD-операций (transport)
 
@@ -214,7 +222,7 @@ handlers: {
 ```
 
 Функция `handlers.success` вызывается, если запрос получил успешный ответ от сервера (включает статусы ответов 200 – 299), который обработчик данного события получает в качестве аргумента.
-Функция `handlers.error` вызывается, если запрос получил ошибочный ответ от сервера (любые статусы >200 и <299), который обработчик данного события получает в качестве аргумента.
+Функция `handlers.error` вызывается, если запрос получил ошибочный ответ от сервера (любые статусы >299 и <200), который обработчик данного события получает в качестве аргумента.
 Функция `handlers.complete` вызывается по окончанию запроса (не имеет значение ошибочный он или успешный).
 
 ## Описание схемы (scheme)

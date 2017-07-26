@@ -13,7 +13,24 @@
         hint: 'Это поле выпадающего списка',
         multiple: true,
         multiname: 'new_value',
-        serverPagination: false,
+        dataSource: {
+            standart: 'YiiSoft',
+            data: [
+                { id: 1, title: 'Value1'},
+                { id: 2, title: 'Value2'},
+                { id: 3, title: 'Value3'}
+            ],
+            scheme: {                
+                model: {
+                    id: 'id',
+                    label: 'title',
+                    fields: [
+                        { name: 'id'},
+                        { name: 'title'}
+                    ]
+                }
+            }
+        },
         width: 6,
         search: true,
         templates: {
@@ -40,7 +57,6 @@
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
 | settings[multiple] | bool | Параметр отвечает за указание возможности поля принимать множественные значения. | - | false |
 | settings[required] | bool | Выделяет заголовок поля жирным, говоря об обязательности заполнения. | - | false |
-| settings[serverPagination] | boolean | Флаг серверной пагинации. Если принимает значение `true`, то компонент будет делать запросы за всеми страницами с данными. | - | `true` |
 | settings[readonly] | bool | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. | - | false |
 | settings[templates] | object | Объект для настройки шаблонов. | - | - |
 | settings[templates][preview] | string или function | Строка с HTML-кодом шаблона, функция, возвращающая шаблон, или путь до шаблона в режиме просмотра (например отображение в таблице). | + | - |
