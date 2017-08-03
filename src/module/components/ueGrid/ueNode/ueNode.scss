@@ -107,9 +107,13 @@
                     cursor: pointer;
                 }
                 &.ue-column-sortable {
+                    label {
+                        margin: 0 20px 0 0;
+                    }
                     & span.glyphicon {
                         float: right;
                         display: inline-block;
+                        top: 5px;
                     }
                 }
                 &.glyphicon {
