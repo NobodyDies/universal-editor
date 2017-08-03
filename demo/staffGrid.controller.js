@@ -161,8 +161,7 @@
             component: {
                 name: 'ue-grid',
                 settings: {
-                    dataSource: staffDataSource,
-                    multiSorting: true,
+                    dataSource: staffDataSource,                   
                     header: {
                         toolbar: [
                             {

@@ -434,7 +434,7 @@
         function changeSortField(field) {
             if (field.sort.enable) {
                 vm.loaded = false;
-                if(vm.multiSorting) {
+                if(!vm.multiSorting) {
                     vm.tableFields.forEach(function(f) { if(f.field !== field.field) { f.sort.direction = 'none'; } });
                 }
                 if (field.sort.direction === 'none') {
