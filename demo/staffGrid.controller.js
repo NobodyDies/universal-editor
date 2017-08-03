@@ -23,7 +23,7 @@
             url: '//universal-backend.dev/rest/v1/staff',
             sortBy: {
                 id: 'desc'
-            },
+            },            
             primaryKey: 'id',
             parentField: 'parent_id',
             keys: {
@@ -162,6 +162,7 @@
                 name: 'ue-grid',
                 settings: {
                     dataSource: staffDataSource,
+                    multiSorting: true,
                     header: {
                         toolbar: [
                             {
