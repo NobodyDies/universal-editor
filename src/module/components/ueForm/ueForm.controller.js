@@ -1,3 +1,4 @@
+import DataSource from '../../classes/dataSource.js';
 (function() {
     'use strict';
 
@@ -52,10 +53,9 @@
             vm.errors = [];
             vm.entityId = '';
             vm.editorEntityType = 'new';
-            vm.editFooterBar = [];
-            vm.idField = 'id';
-
-            var dataSource = vm.componentSettings.dataSource;
+            vm.editFooterBar = [];       
+            var dataSource = new DataSource(vm.componentSettings.dataSource);
+            vm.idField = dataSource.primaryKey || 'id';
             var header = vm.componentSettings.header;
             if (angular.isObject(header)) {
                 vm.toolbar = header.toolbar;
@@ -80,9 +80,9 @@
             vm.options = angular.copy(vm.options);
             angular.merge(vm.options, {
                 isLoading: false,
-                $componentId: vm.setting.component.$id,
-                $dataSource: dataSource
+                $componentId: vm.setting.component.$id
             });
+            vm.options.$dataSource = dataSource;
 
             if (angular.isFunction(vm.componentSettings.primaryKeyValue)) {
                 pk = vm.componentSettings.primaryKeyValue();
@@ -91,9 +91,6 @@
             }
             vm.isNewRecord = pk === null || pk === undefined;
 
-            if (dataSource && dataSource.hasOwnProperty('primaryKey')) {
-                vm.idField = dataSource.primaryKey || vm.idField;
-            }
 
             /** Filling footer section */
             if (!!vm.componentSettings.footer && !!vm.componentSettings.footer.toolbar) {

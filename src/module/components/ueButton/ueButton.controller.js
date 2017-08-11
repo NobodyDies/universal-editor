@@ -189,8 +189,6 @@
                     var newRequest = {
                         id: vm.entityId,
                         options: vm.options,
-                        url: vm.setting.url,
-                        parentField: vm.setting.parentField,
                         $componentId: vm.options.$componentId
                     };
                     angular.merge(newRequest, handlers);
