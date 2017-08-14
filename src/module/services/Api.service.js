@@ -1,4 +1,5 @@
 import DataSource from '../classes/dataSource.js';
+
 (function() {
     'use strict';
 
@@ -17,6 +18,8 @@ import DataSource from '../classes/dataSource.js';
         this.saveToStorage = saveToStorage;
         this.getFromStorage = getFromStorage;
         this.getCustomService = getCustomService;
+        this.checkStandardParameter = checkStandardParameter;
+        this.getAjaxOptionsByTypeService = getAjaxOptionsByTypeService;
 
         function setTimeOutPromise(id, mode) {
             var def = $q.defer();

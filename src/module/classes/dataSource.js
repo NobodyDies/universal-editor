@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  module.exports = class DataSource {
+  module.exports = window.DataSource = class DataSource {
     constructor(options) {
       this.url = options.url;
       this.transport = options.transport;
