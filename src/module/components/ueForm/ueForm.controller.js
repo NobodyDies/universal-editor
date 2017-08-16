@@ -44,6 +44,7 @@ import DataSource from '../../classes/dataSource.js';
             ];
 
         vm.$onInit = function() {
+            vm.isLoading = true;
 
             //** Nested base controller */
             angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
@@ -91,6 +92,15 @@ import DataSource from '../../classes/dataSource.js';
             }
             vm.isNewRecord = pk === null || pk === undefined;
 
+            $timeout(function() {
+                if(vm.isNewRecord) {
+                    vm.isLoading = false;
+                }
+            }, 0)
+
+            if (dataSource && dataSource.hasOwnProperty('primaryKey')) {
+                vm.idField = dataSource.primaryKey || vm.idField;
+            }
 
             /** Filling footer section */
             if (!!vm.componentSettings.footer && !!vm.componentSettings.footer.toolbar) {
@@ -145,6 +155,7 @@ import DataSource from '../../classes/dataSource.js';
                 } else {
                     ApiService.getItemById(pk, vm.options).finally(function() {
                         vm.options.isLoading = false;
+                        vm.isLoading = false;
                     });
                 }
             } else {
