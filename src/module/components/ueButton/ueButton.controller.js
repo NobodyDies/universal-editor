@@ -80,6 +80,7 @@
                     elemStyle.display = showBtn ? 'block' : 'none';
                 }
             });
+            EditEntityStorage.addFieldController(vm);
         };
 
         function clickLink() {
