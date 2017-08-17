@@ -25,7 +25,7 @@
           url = this.transport[action].url || url;
         } else {
           if (url) {
-            if (action !== 'read' && entity[this.primaryKey]) {
+            if (action !== 'read' && action !== 'create' && entity[this.primaryKey]) {
               url += '/' + entity[this.primaryKey];
             }
           }
@@ -59,7 +59,7 @@
     }
 
     getMethod(action) {
-      let method = 'GET';
+      let method = null;
       if (angular.isString(action) && angular.isObject(this.transport) && angular.isObject(this.transport[action]) && angular.isString(this.transport[action].method)) {
         method = this.transport[action].method;
       }

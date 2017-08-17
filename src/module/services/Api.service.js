@@ -958,7 +958,7 @@ import DataSource from '../classes/dataSource.js';
                     if ($location.search().back && config.useBackUrl) {
                         state = $location.search().back;
                     } else {
-                        state = config.request.state;
+                        state = config.state;
                     }
                     if (state) {
                         $state.go(state, params).then(function() {
