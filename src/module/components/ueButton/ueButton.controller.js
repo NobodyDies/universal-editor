@@ -160,7 +160,6 @@
                     return;
                 }
                 switchLoader();
-                debugger;
                 request.state = componentSettings.sref;
                 request.useBackUrl = componentSettings.useBackUrl === true;
                 request.href = componentSettings.href;

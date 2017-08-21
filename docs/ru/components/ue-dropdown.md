@@ -16,7 +16,6 @@
         depend: 'other_field_name',
         handlers: {
             change: function(newValue, oldValue) {
-                debugger;
             }
         },
         serverPagination: false,

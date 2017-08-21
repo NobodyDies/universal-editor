@@ -14,7 +14,6 @@
         width: 6,
         handlers: {
             change: function(newValue, oldValue) {
-                debugger;
             }
         },
         templates: {
